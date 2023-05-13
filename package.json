@@ -1,0 +1,33 @@
+{
+    "name": "flutter-celo-nft",
+    "version": "1.0.0",
+    "description": "Custom Celo Composer project.",
+    "private": true,
+    "author": "Celo",
+    "license": "MIT",
+    "scripts": {
+        "hardhat:test": "yarn workspace @flutter-celo-nft/hardhat test",
+        "hardhat:test-local": "yarn workspace @flutter-celo-nft/hardhat test-local",
+        "hardhat:accounts": "yarn workspace @flutter-celo-nft/hardhat accounts",
+        "hardhat:devchain": "yarn workspace @flutter-celo-nft/hardhat devchain",
+        "hardhat:deploy": "yarn workspace @flutter-celo-nft/hardhat deploy",
+        "hardhat:deploy-reset-watch": "yarn workspace @flutter-celo-nft/hardhat deploy-reset-watch",
+        "hardhat:watch": "yarn workspace @flutter-celo-nft/hardhat watch",
+        "hardhat:fork-mainnet": "yarn workspace @flutter-celo-nft/hardhat fork-mainnet"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/celo-org/celo-composer.git"
+    },
+    "bugs": {
+        "url": "https://github.com/celo-org/celo-composer/issues"
+    },
+    "homepage": "https://github.com/celo-org/celo-composer/blob/main/README.md",
+    "workspaces": [
+        "packages/*"
+    ],
+    "keywords": [
+        "celo-composer",
+        "celo"
+    ]
+}
