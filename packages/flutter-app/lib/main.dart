@@ -19,7 +19,7 @@ Future<void> main() async {
   runApp(
     MyApp(
       walletConnect: await walletConnect,
-      greeterContract: await deployedGreeterContract,
+      nftCollectionContract: await deployedNftCollectionContract,
       web3client: web3Client,
     ),
   );
@@ -28,12 +28,12 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({
     required this.walletConnect,
-    required this.greeterContract,
+    required this.nftCollectionContract,
     required this.web3client,
     Key? key,
   }) : super(key: key);
   final WalletConnect walletConnect;
-  final DeployedContract greeterContract;
+  final DeployedContract nftCollectionContract;
   final Web3Client web3client;
 
   @override
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<Web3Cubit>(
           create: (BuildContext context) => Web3Cubit(
             web3Client: web3client,
-            greeterContract: greeterContract,
+            nftCollectionContract: nftCollectionContract,
           ),
         ),
         BlocProvider<AuthCubit>(

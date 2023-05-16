@@ -30,13 +30,13 @@ Future<WalletConnect> get walletConnect async {
 }
 
 /// Get deployed greeter contract
-Future<DeployedContract> get deployedGreeterContract async {
-  const String abiDirectory = 'lib/contracts/staging/greeter.abi.json';
-  final String contractAddress = dotenv.get('GREETER_CONTRACT_ADDRESS');
+Future<DeployedContract> get deployedNftCollectionContract async {
+  const String abiDirectory = 'lib/contracts/nftcollection.abi.json';
+  final String contractAddress = dotenv.get('NFTCOLLECTION_CONTRACT_ADDRESS');
   String contractABI = await rootBundle.loadString(abiDirectory);
 
   final DeployedContract contract = DeployedContract(
-    ContractAbi.fromJson(contractABI, 'Greeter'),
+    ContractAbi.fromJson(contractABI, 'NFTCollection'),
     EthereumAddress.fromHex(contractAddress),
   );
 

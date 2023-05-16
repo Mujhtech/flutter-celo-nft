@@ -12,12 +12,12 @@ part 'web3_state.dart';
 class Web3Cubit extends Cubit<Web3State> {
   Web3Cubit({
     required this.web3Client,
-    required this.greeterContract,
+    required this.nftCollectionContract,
   }) : super(const Web3State());
 
   // core declarations
   final Web3Client web3Client;
-  final DeployedContract greeterContract;
+  final DeployedContract nftCollectionContract;
   late String sender;
   late SessionStatus sessionStatus;
   late EthereumWalletConnectProvider provider;
@@ -60,8 +60,8 @@ class Web3Cubit extends Cubit<Web3State> {
   Future<void> fetchGreeting() async {
     try {
       List<dynamic> response = await web3Client.call(
-        contract: greeterContract,
-        function: greeterContract.function(greetFunction),
+        contract: nftCollectionContract,
+        function: nftCollectionContract.function(greetFunction),
         params: <dynamic>[],
       );
       emit(FetchGreetingSuccess(message: response[0]));
@@ -77,8 +77,8 @@ class Web3Cubit extends Cubit<Web3State> {
       String txnHash = await web3Client.sendTransaction(
         wcCredentials,
         Transaction.callContract(
-          contract: greeterContract,
-          function: greeterContract.function(setGreetingFunction),
+          contract: nftCollectionContract,
+          function: nftCollectionContract.function(setGreetingFunction),
           from: EthereumAddress.fromHex(sender),
           parameters: <String>[text],
         ),

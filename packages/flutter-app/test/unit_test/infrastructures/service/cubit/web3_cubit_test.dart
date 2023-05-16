@@ -51,7 +51,7 @@ void main() {
   group('Web3 cubit', () {
     test('On initializeProvider, emits InitializeProviderSuccess.', () {
       final Web3Cubit cubit = Web3Cubit(
-        greeterContract: mockDeployedContract,
+        nftCollectionContract: mockDeployedContract,
         web3Client: mockWeb3Client,
       );
       cubit.initializeProvider(
@@ -87,7 +87,7 @@ void main() {
           return <String>['result response'];
         });
         final Web3Cubit cubit = Web3Cubit(
-          greeterContract: await _deployedContract,
+          nftCollectionContract: await _deployedContract,
           web3Client: mockWeb3Client,
         );
 
@@ -120,7 +120,7 @@ void main() {
           .thenThrow('Something went wrong');
 
       final Web3Cubit cubit = Web3Cubit(
-        greeterContract: await _deployedContract,
+        nftCollectionContract: await _deployedContract,
         web3Client: mockWeb3Client,
       );
 
@@ -150,7 +150,7 @@ void main() {
           return <String>['result response'];
         });
         final Web3Cubit cubit = Web3Cubit(
-          greeterContract: await _deployedContract,
+          nftCollectionContract: await _deployedContract,
           web3Client: mockWeb3Client,
         );
 
@@ -174,7 +174,7 @@ void main() {
             params: any(named: 'params'))).thenThrow('Something went wrong.');
 
         final Web3Cubit cubit = Web3Cubit(
-          greeterContract: await _deployedContract,
+          nftCollectionContract: await _deployedContract,
           web3Client: mockWeb3Client,
         );
 
