@@ -5,6 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_celo_composer/configs/themes.dart';
 import 'package:flutter_celo_composer/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:flutter_celo_composer/module/auth/interfaces/screens/authentication_screen.dart';
+import 'package:flutter_celo_composer/module/auth/service/cubit/auth_cubit.dart';
+import 'package:jazzicon/jazzicon.dart';
+import 'package:jazzicon/jazziconshape.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 
@@ -28,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String accountAddress = '';
   String networkName = '';
   TextEditingController greetingTextController = TextEditingController();
+  JazziconData? jazz;
 
   ButtonStyle buttonStyle = ButtonStyle(
     elevation: MaterialStateProperty.all(0),
@@ -39,24 +43,18 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 
-  void updateGreeting() {
-    launchUrlString(widget.uri, mode: LaunchMode.externalApplication);
-
-    context.read<Web3Cubit>().updateGreeting(greetingTextController.text);
-    greetingTextController.text = '';
-  }
-
   @override
   void initState() {
     super.initState();
 
     /// Execute after frame is rendered to get the emit state of InitializeProviderSuccess
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) => context.read<Web3Cubit>().initializeProvider(
-            connector: widget.connector,
-            session: widget.session,
-          ),
-    );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      accountAddress = widget.connector.session.accounts[0];
+      jazz = Jazzicon.getJazziconData(40,
+          address: widget.connector.session.accounts[0]);
+
+      setState(() {});
+    });
   }
 
   @override
@@ -65,8 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
-    return BlocListener<Web3Cubit, Web3State>(
-      listener: (BuildContext context, Web3State state) {
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (BuildContext context, AuthState state) {
         if (state is SessionTerminated) {
           Future<void>.delayed(const Duration(seconds: 2), () {
             Navigator.of(context).pushReplacement(
@@ -75,25 +73,11 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             );
           });
-        } else if (state is UpdateGreetingFailed) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-            ),
-          );
-        } else if (state is FetchGreetingFailed) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.red,
-            ),
-          );
-        } else if (state is InitializeProviderSuccess) {
-          setState(() {
-            accountAddress = state.accountAddress;
-            networkName = state.networkName;
-          });
+        } else if (state is EstablishConnectionSuccess) {
+          // setState(() {
+          //   accountAddress = state.session[0];
+          //   networkName = state.networkName;
+          // });
         }
       },
       child: Scaffold(
