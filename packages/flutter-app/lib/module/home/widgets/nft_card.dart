@@ -1,8 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_celo_composer/module/home/model/nft_model.dart';
 
 class NftCard extends StatelessWidget {
-  const NftCard({super.key});
+  const NftCard({
+    required this.nft,
+    super.key,
+  });
+  final NftModel nft;
 
   @override
   Widget build(BuildContext context) {
@@ -19,18 +24,18 @@ class NftCard extends StatelessWidget {
                 color: Colors.black.withOpacity(0.04))
           ]),
       child: Column(
-        children: [
+        children: <Widget>[
           Expanded(
             child: Container(
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
-                  image: const DecorationImage(
+                  image: DecorationImage(
                       image: CachedNetworkImageProvider(
-                          'https://i.seadn.io/s/primary-drops/0xa76699ffc87188a3487ddf0c53e3748aef7f4c91/25274694:about:preview_media:65b9a4ad-b4fb-4542-a48a-20d458d72d15.png?auto=format&dpr=1&w=3840'))),
+                          nft.normalizedMetadata?.image ?? ''))),
             ),
           ),
           Text(
-            '#1',
+            '#${nft.tokenId}',
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context)
                 .textTheme

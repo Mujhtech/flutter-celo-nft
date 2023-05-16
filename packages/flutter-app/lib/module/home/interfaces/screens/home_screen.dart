@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_celo_composer/module/auth/service/cubit/auth_cubit.dart';
 import 'package:flutter_celo_composer/module/home/model/nft_model.dart';
 import 'package:flutter_celo_composer/module/home/services/cubit/nft_cubit.dart';
 import 'package:flutter_celo_composer/module/home/widgets/nft_card.dart';
@@ -113,10 +110,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 shrinkWrap: true,
                 itemBuilder: (_, int index) {
                   return NftCard(
+                    nft: nfts[index],
                     key: Key(index.toString()),
                   );
                 },
-                itemCount: 20,
+                itemCount: nfts.length,
               ),
             ),
             Container(
