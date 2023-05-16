@@ -8,7 +8,6 @@ import 'package:flutter_celo_composer/module/auth/interfaces/screens/authenticat
 import 'package:flutter_celo_composer/module/auth/service/cubit/auth_cubit.dart';
 import 'package:jazzicon/jazzicon.dart';
 import 'package:jazzicon/jazziconshape.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 
 class HomeScreen extends StatefulWidget {

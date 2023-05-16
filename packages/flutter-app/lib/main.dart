@@ -5,7 +5,6 @@ import 'package:flutter_celo_composer/configs/themes.dart';
 import 'package:flutter_celo_composer/configs/web3_config.dart';
 import 'package:flutter_celo_composer/infrastructures/repository/secure_storage_repository.dart';
 import 'package:flutter_celo_composer/infrastructures/service/cubit/secure_storage_cubit.dart';
-import 'package:flutter_celo_composer/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:flutter_celo_composer/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:flutter_celo_composer/module/auth/service/cubit/auth_cubit.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
