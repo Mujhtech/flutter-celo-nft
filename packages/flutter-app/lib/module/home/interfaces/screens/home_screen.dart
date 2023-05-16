@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_celo_composer/configs/themes.dart';
-import 'package:flutter_celo_composer/infrastructures/service/cubit/web3_cubit.dart';
-import 'package:flutter_celo_composer/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:flutter_celo_composer/module/auth/service/cubit/auth_cubit.dart';
+import 'package:flutter_celo_composer/module/home/model/nft_model.dart';
+import 'package:flutter_celo_composer/module/home/services/cubit/nft_cubit.dart';
+import 'package:flutter_celo_composer/module/home/widgets/nft_card.dart';
 import 'package:jazzicon/jazzicon.dart';
 import 'package:jazzicon/jazziconshape.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
@@ -53,6 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
           address: widget.connector.session.accounts[0]);
 
       setState(() {});
+
+      context.read<NftCubit>().fetchNfts();
     });
   }
 
@@ -62,105 +64,92 @@ class _HomeScreenState extends State<HomeScreen> {
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
-    return BlocListener<AuthCubit, AuthState>(
-      listener: (BuildContext context, AuthState state) {
-        if (state is SessionTerminated) {
-          Future<void>.delayed(const Duration(seconds: 2), () {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute<void>(
-                builder: (BuildContext context) => const AuthenticationScreen(),
-              ),
-            );
-          });
-        } else if (state is EstablishConnectionSuccess) {
-          // setState(() {
-          //   accountAddress = state.session[0];
-          //   networkName = state.networkName;
-          // });
-        }
+    List<NftModel> nfts = [];
+
+    return BlocListener<NftCubit, NftState>(
+      listener: (BuildContext context, NftState state) {
+        if (state is FetchNftSuccess) {
+          nfts = state.nfts;
+        } else if (state is FetchNftFailed) {
+        } else if (state is FetchNftLoading) {}
       },
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          // ignore: use_decorated_box
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(colors: flirtGradient),
-            ),
+          title: Image.asset(
+            'assets/images/logo.png',
+            width: 50,
+            height: 50,
           ),
-          toolbarHeight: 0,
-          automaticallyImplyLeading: false,
+          centerTitle: true,
+          // ignore: use_decorated_box
+          backgroundColor: const Color(0xFFFCFF52),
         ),
         backgroundColor: Colors.white,
-        resizeToAvoidBottomInset: false,
-        body: SafeArea(
-          child: Column(
-            children: <Widget>[
-              Container(
-                width: double.infinity,
-                height: 70,
-                color: const Color(0xFFFCFF52),
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Image.asset(
-                    'assets/images/logo.png',
-                    width: 16,
+        body: Column(
+          children: <Widget>[
+            Column(
+              children: [
+                const SizedBox(height: 10),
+                if (accountAddress.isNotEmpty)
+                  Text(
+                    'Address: ${accountAddress.substring(0, 8)}...${accountAddress.substring(accountAddress.length - 8, accountAddress.length)}',
+                    style: theme.textTheme.titleMedium!.copyWith(
+                      color: Colors.black,
+                    ),
+                  ),
+              ],
+            ),
+            Expanded(
+              child: GridView.builder(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1 / 1.08,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                ),
+                shrinkWrap: true,
+                itemBuilder: (_, int index) {
+                  return NftCard(
+                    key: Key(index.toString()),
+                  );
+                },
+                itemCount: 20,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: SizedBox(
+                width: width,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    //context.read<AuthCubit>().();
+                  },
+                  icon: const Icon(
+                    Icons.power_settings_new,
+                  ),
+                  label: Text(
+                    'Disconnect',
+                    style: theme.textTheme.titleMedium!
+                        .copyWith(color: Colors.black),
+                  ),
+                  style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(0),
+                    backgroundColor: MaterialStateProperty.all(
+                      Colors.grey.shade400,
+                    ),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                    ),
                   ),
                 ),
               ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    // conditionally print the address
-                    if (accountAddress.isNotEmpty)
-                      Text(
-                        'Address: ${accountAddress.substring(0, 8)}...${accountAddress.substring(accountAddress.length - 8, accountAddress.length)}',
-                        style: theme.textTheme.titleMedium!.copyWith(
-                          color: Colors.black,
-                        ),
-                      ),
-                    const SizedBox(height: 10),
-                    Text(
-                      'Network: $networkName',
-                      style: theme.textTheme.titleMedium!.copyWith(
-                        color: Colors.black,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 10),
-                      child: SizedBox(
-                        width: width,
-                        child: ElevatedButton.icon(
-                          onPressed: context.read<Web3Cubit>().closeConnection,
-                          icon: const Icon(
-                            Icons.power_settings_new,
-                          ),
-                          label: Text(
-                            'Disconnect',
-                            style: theme.textTheme.titleMedium!
-                                .copyWith(color: Colors.black),
-                          ),
-                          style: ButtonStyle(
-                            elevation: MaterialStateProperty.all(0),
-                            backgroundColor: MaterialStateProperty.all(
-                              Colors.grey.shade400,
-                            ),
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(25),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
