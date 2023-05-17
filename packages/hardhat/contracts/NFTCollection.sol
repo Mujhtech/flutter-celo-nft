@@ -12,6 +12,10 @@ contract NFTCollection is ERC721, Ownable {
         tokenCounter = 0;
     }
 
+    function getTokenCounter() public view returns (uint256) {
+        return (tokenCounter);
+    }
+
     function mint(string memory _tokenURI) public {
         _safeMint(msg.sender, tokenCounter);
         _setTokenURI(tokenCounter, _tokenURI);

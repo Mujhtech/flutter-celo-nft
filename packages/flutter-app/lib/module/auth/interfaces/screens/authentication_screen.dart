@@ -72,56 +72,51 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
           );
         }
       },
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: const Color(0xFFFFFFFF),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: double.infinity,
-                height: 70,
-                color: const Color(0xFFFCFF52),
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Image.asset(
-                    'assets/images/logo.png',
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          title: Image.asset(
+            'assets/images/logo.png',
+            width: 50,
+            height: 50,
+          ),
+          centerTitle: true,
+          // ignore: use_decorated_box
+          backgroundColor: const Color(0xFFFCFF52),
+        ),
+        backgroundColor: const Color(0xFFFFFFFF),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: ElevatedButton.icon(
+                  onPressed: () => _launchApp(),
+                  icon: Image.asset(
+                    'assets/images/metamask-logo.png',
                     width: 16,
                   ),
-                ),
-              ),
-              Expanded(
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: ElevatedButton.icon(
-                      onPressed: () => _launchApp(),
-                      icon: Image.asset(
-                        'assets/images/metamask-logo.png',
-                        width: 16,
-                      ),
-                      label: Text(
-                        'Login with Metamask',
-                        style: theme.textTheme.titleMedium
-                            ?.copyWith(color: Colors.black),
-                      ),
-                      style: ButtonStyle(
-                        elevation: MaterialStateProperty.all(0),
-                        backgroundColor: MaterialStateProperty.all(
-                          Colors.grey.shade300,
-                        ),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                        ),
+                  label: Text(
+                    'Login with Metamask',
+                    style: theme.textTheme.titleMedium
+                        ?.copyWith(color: Colors.black),
+                  ),
+                  style: ButtonStyle(
+                    elevation: MaterialStateProperty.all(0),
+                    backgroundColor: MaterialStateProperty.all(
+                      Colors.grey.shade300,
+                    ),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
                       ),
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

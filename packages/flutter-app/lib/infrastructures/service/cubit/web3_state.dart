@@ -37,17 +37,17 @@ class SessionTerminated extends Web3State {
 /// Greeter contract
 /// Contains Greeter contract related events
 
-class FetchGreetingLoading extends Web3State {
-  FetchGreetingLoading();
+class FetchTokenCountLoading extends Web3State {
+  FetchTokenCountLoading();
 }
 
-class FetchGreetingSuccess extends Web3State {
-  const FetchGreetingSuccess({required this.message});
-  final String message;
+class FetchTokenCountSuccess extends Web3State {
+  const FetchTokenCountSuccess({required this.counter});
+  final int counter;
 }
 
-class FetchGreetingFailed extends Web3State {
-  const FetchGreetingFailed({
+class FetchTokenCountFailed extends Web3State {
+  const FetchTokenCountFailed({
     required this.errorCode,
     required this.message,
   });
@@ -56,16 +56,16 @@ class FetchGreetingFailed extends Web3State {
   final String message;
 }
 
-class UpdateGreetingLoading extends Web3State {
-  UpdateGreetingLoading();
+class MintLoading extends Web3State {
+  MintLoading();
 }
 
-class UpdateGreetingSuccess extends Web3State {
-  const UpdateGreetingSuccess();
+class MintSuccess extends Web3State {
+  const MintSuccess();
 }
 
-class UpdateGreetingFailed extends Web3State {
-  const UpdateGreetingFailed({
+class MintFailed extends Web3State {
+  const MintFailed({
     required this.errorCode,
     required this.message,
   });

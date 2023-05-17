@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_celo_composer/internal/ethereum_credentials.dart';
 import 'package:flutter_celo_composer/internal/web3_contract.dart';
 import 'package:flutter_celo_composer/internal/web3_utils.dart';
+import 'package:flutter_celo_composer/module/home/models/nft_model.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3dart/web3dart.dart';
 
@@ -25,11 +26,11 @@ class Web3Cubit extends Cubit<Web3State> {
   late WalletConnectEthereumCredentials wcCredentials;
 
   // contract-specific declarations
-  late Timer fetchGreetingTimer;
+  late Timer fetchTokenCountTimer;
 
   /// Terminates metamask, provider, contract connections
   void closeConnection() {
-    fetchGreetingTimer.cancel();
+    fetchTokenCountTimer.cancel();
     walletConnector.killSession();
     walletConnector.close();
 
@@ -48,8 +49,8 @@ class Web3Cubit extends Cubit<Web3State> {
     wcCredentials = WalletConnectEthereumCredentials(provider: provider);
 
     /// periodically fetch greeting from chain
-    fetchGreetingTimer =
-        Timer.periodic(const Duration(seconds: 5), (_) => fetchGreeting());
+    fetchTokenCountTimer =
+        Timer.periodic(const Duration(seconds: 5), (_) => fetchTokenCount());
     emit(InitializeProviderSuccess(
         accountAddress: sender, networkName: getNetworkName(session.chainId)));
   }
@@ -57,30 +58,29 @@ class Web3Cubit extends Cubit<Web3State> {
   /// Greeter contract
 
   /// Get greeting from
-  Future<void> fetchGreeting() async {
+  Future<void> fetchTokenCount() async {
     try {
       List<dynamic> response = await web3Client.call(
         contract: nftCollectionContract,
-        function: nftCollectionContract.function(greetFunction),
+        function: nftCollectionContract.function(getTokenCounterFunction),
         params: <dynamic>[],
       );
-      emit(FetchGreetingSuccess(message: response[0]));
+      emit(FetchTokenCountSuccess(counter: (response[0] as BigInt).toInt()));
     } catch (e) {
-      emit(FetchGreetingFailed(errorCode: '', message: e.toString()));
+      emit(FetchTokenCountFailed(errorCode: '', message: e.toString()));
     }
   }
 
-  /// Update greeter contract with provided [text]
-  Future<void> updateGreeting(String text) async {
-    emit(UpdateGreetingLoading());
+  Future<void> mint(String nftUrl) async {
+    emit(MintLoading());
     try {
       String txnHash = await web3Client.sendTransaction(
         wcCredentials,
         Transaction.callContract(
           contract: nftCollectionContract,
-          function: nftCollectionContract.function(setGreetingFunction),
+          function: nftCollectionContract.function(minFunction),
           from: EthereumAddress.fromHex(sender),
-          parameters: <String>[text],
+          parameters: <dynamic>[nftUrl],
         ),
         chainId: sessionStatus.chainId,
       );
@@ -91,16 +91,34 @@ class Web3Cubit extends Cubit<Web3State> {
           (_) async {
         TransactionReceipt? t = await web3Client.getTransactionReceipt(txnHash);
         if (t != null) {
-          emit(const UpdateGreetingSuccess());
-          fetchGreeting();
+          emit(const MintSuccess());
+          fetchTokenCount();
           txnTimer.cancel();
         }
       });
     } catch (e) {
-      emit(UpdateGreetingFailed(errorCode: '', message: e.toString()));
+      emit(MintFailed(errorCode: '', message: e.toString()));
     }
   }
 
-  /// TODO: <another> contract
-  /// You can add and specify more contracts here
+  Future<List<NftModel>> fetchAllNft(int totalTokenCounter) async {
+    try {
+      final List<NftModel> nfts = <NftModel>[];
+      for (int i = 0; i < totalTokenCounter; i++) {
+        List<dynamic> response = await web3Client.call(
+          contract: nftCollectionContract,
+          function: nftCollectionContract.function(tokenURIFunction),
+          params: <dynamic>[BigInt.from(i)],
+        );
+
+        nfts.add(NftModel(tokenId: i, tokenUri: response[0]));
+      }
+
+      return nfts;
+    } catch (e) {
+      //
+
+      throw e.toString();
+    }
+  }
 }

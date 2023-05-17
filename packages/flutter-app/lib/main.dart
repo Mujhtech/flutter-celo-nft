@@ -8,6 +8,7 @@ import 'package:flutter_celo_composer/infrastructures/service/cubit/secure_stora
 import 'package:flutter_celo_composer/infrastructures/service/cubit/web3_cubit.dart';
 import 'package:flutter_celo_composer/module/auth/interfaces/screens/authentication_screen.dart';
 import 'package:flutter_celo_composer/module/auth/service/cubit/auth_cubit.dart';
+import 'package:flutter_celo_composer/module/home/services/cubit/art_cubit.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:walletconnect_dart/walletconnect_dart.dart';
 import 'package:web3dart/web3dart.dart';
@@ -45,6 +46,9 @@ class MyApp extends StatelessWidget {
             web3Client: web3client,
             nftCollectionContract: nftCollectionContract,
           ),
+        ),
+        BlocProvider<ArtCubit>(
+          create: (BuildContext context) => ArtCubit(),
         ),
         BlocProvider<AuthCubit>(
           create: (BuildContext context) => AuthCubit(
